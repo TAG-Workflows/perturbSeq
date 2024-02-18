@@ -61,8 +61,8 @@ task PIPseeker {
 
         echo "Running PIPseeker"
         echo "PIPseeker version: ~{pipseeker_docker}"
-        echo "$(pwd)"
-        echo "$(ls -l)"
+        echo "$PATH"
+
         ./pipseeker full \
         --chemistry ~{PIPseq_chemistry} \
         --fastq SAMPLE_FASTQS/~{fastq_prefix} \
