@@ -60,6 +60,9 @@ task PIPseeker {
         for f in "${REF_ARRAY[@]}"; do mv $f REFERNCE; done
 
         echo "Running PIPseeker"
+        echo "PIPseeker version: ~{pipseeker_docker}"
+        echo "$(pwd)"
+        echo "$(ls -l)"
         ./pipseeker full \
         --chemistry ~{PIPseq_chemistry} \
         --fastq SAMPLE_FASTQS/~{fastq_prefix} \
