@@ -62,6 +62,7 @@ task PIPseeker {
         echo "Running PIPseeker"
         echo "PIPseeker version: ~{pipseeker_docker}"
         echo "$PATH"
+        find / -name pipseeker -type f
 
         ./pipseeker full \
         --chemistry ~{PIPseq_chemistry} \
