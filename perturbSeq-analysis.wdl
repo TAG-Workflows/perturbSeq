@@ -4,6 +4,7 @@ workflow perturbSeq {
     input {
         String PIPseq_chemistry
         Array[File] fastqs
+        String fastq_prefix
         Array[File] mapping_references
         File? annotation
     }
@@ -12,6 +13,7 @@ workflow perturbSeq {
     parameter_meta {
         PIPseq_chemistry : {help: "Versions of the PIPseq assay", suggestions: ["v3", "v4", "v5"]}
         fastqs : {help: "The path to the input FASTQ files"}
+        fastq_prefix : {help: "A prefix for the names of the input FASTQ files"}
         mapping_references : {help: "The path to STAR reference files to use for mapping"}
         annotation : {help: "(Optional) The path to reference file for cell type annotation of the clustering results."}
     }
@@ -25,6 +27,7 @@ workflow perturbSeq {
         input:
             PIPseq_chemistry = PIPseq_chemistry,
             fastqs = fastqs,
+            fastq_prefix = fastq_prefix,
             mapping_references = mapping_references,
             annotation = annotation
     }
@@ -34,6 +37,7 @@ task PIPseeker {
     input {
         String PIPseq_chemistry
         Array[File] fastqs
+        String fastq_prefix
         Array[File] mapping_references
         String pipseeker_docker = "public.ecr.aws/w3e1n2j6/fluent-pipseeker:3.1.3"
         File? annotation
@@ -58,7 +62,7 @@ task PIPseeker {
         echo "Running PIPseeker"
         ./pipseeker full \
         --chemistry ~{PIPseq_chemistry} \
-        --fastq SAMPLE_FASTQS \
+        --fastq SAMPLE_FASTQS/~{fastq_prefix} \
         --star-index-path REFERNCE \
         ~{'--annotation '+ annotation} \
         --output-path RESULTS \
