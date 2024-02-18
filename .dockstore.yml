@@ -5,3 +5,7 @@ workflows:
      primaryDescriptorPath: /perturbSeq-analysis.wdl
      testParameterFiles:
      -  /perturbSeq-analysis.tutorial.inputs.json
+     readMePath: /README.md
+     authors:
+       - name: Yueyao Gao
+         email: gaoyueya@broadinstitute.org
