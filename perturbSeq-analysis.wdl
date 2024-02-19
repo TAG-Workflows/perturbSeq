@@ -18,9 +18,9 @@ workflow perturbSeq {
         annotation : {help: "(Optional) The path to reference file for cell type annotation of the clustering results."}
     }
     meta {
-    author: "Yueyao Gao"
-    email: "gaoyueya@broadinstitute.org"
-    description: "This is a workflow to process perturb-seq data."
+        author: "Yueyao Gao"
+        email: "gaoyueya@broadinstitute.org"
+        description: "This is a workflow to process perturb-seq data."
     }
 
     call PIPseeker{
@@ -30,6 +30,11 @@ workflow perturbSeq {
             fastq_prefix = fastq_prefix,
             mapping_references = mapping_references,
             annotation = annotation
+    }
+
+    output {
+        File PIPseeker_report = PIPseeker.PIPseeker_report
+        File PIPseeker_out_bam = PIPseeker.star_out_bam
     }
 }
 
@@ -67,9 +72,12 @@ task PIPseeker {
         --fastq SAMPLE_FASTQS/~{fastq_prefix} \
         --star-index-path REFERNCE \
         ~{'--annotation '+ annotation} \
+        --id ~{fastq_prefix} \
         --output-path RESULTS \
         --threads ~{cpu_count}
 
+        mv RESULTS/*.html ~{fastq_prefix}_report.html
+        mv RESULTS/*.bam ~{fastq_prefix}_star_out.bam
     >>>
     runtime {
         docker: pipseeker_docker
@@ -81,6 +89,7 @@ task PIPseeker {
   }
 
   output {
-    Array[File] results = glob("RESULTS/*")
+    File PIPseeker_report = "~{fastq_prefix}_report.html"
+      File star_out_bam = "~{fastq_prefix}_star_out.bam"
     }
 }
