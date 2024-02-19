@@ -61,10 +61,8 @@ task PIPseeker {
 
         echo "Running PIPseeker"
         echo "PIPseeker version: ~{pipseeker_docker}"
-        echo "$PATH"
-        find / -name pipseeker -type f
 
-        ./pipseeker full \
+        /app/pipseeker full \
         --chemistry ~{PIPseq_chemistry} \
         --fastq SAMPLE_FASTQS/~{fastq_prefix} \
         --star-index-path REFERNCE \
