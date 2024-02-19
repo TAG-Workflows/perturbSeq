@@ -41,7 +41,7 @@ task PIPseeker {
         Array[File] mapping_references
         String pipseeker_docker = "public.ecr.aws/w3e1n2j6/fluent-pipseeker:3.1.3"
         File? annotation
-        Int mem_size = 16
+        Int mem_size = 32
         Int cpu_count = 4
         Int disk_size = 100
         Int preemptible = 0

@@ -9,3 +9,6 @@ workflows:
      authors:
        - name: Yueyao Gao
          email: gaoyueya@broadinstitute.org
+         role: Developer
+         affiliation: Broad Institute
+         orcid: 0000-0002-7607-2938
