@@ -1,10 +1,12 @@
 {
   "perturbSeq.PIPseeker.pipseeker_docker": "public.ecr.aws/w3e1n2j6/fluent-pipseeker:3.1.3",
   "perturbSeq.PIPseeker.mem_size": 16,
-  "perturbSeq.mapping_reference": "File",
+  "perturbSeq.mapping_reference": "Files",
   "perturbSeq.PIPseeker.cpu_count": 4,
   "perturbSeq.PIPseq_chemistry": "v4",
   "perturbSeq.PIPseeker.preemptible": 0,
   "perturbSeq.PIPseeker.disk_size": 100,
-  "perturbSeq.fastqs": "File"
+  "perturbSeq.fastqs": "Files",
+  "perturbSeq.snt_fastqs": "Files",
+  "perturbSeq.snt_tags": "File"
 }

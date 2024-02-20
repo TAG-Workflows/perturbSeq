@@ -6,6 +6,8 @@ workflow perturbSeq {
         Array[File] fastqs
         String fastq_prefix
         Array[File] mapping_references
+        Array[File]? snt_fastqs
+        File? snt_tags
         File? annotation
     }
     # version of the pipeline
@@ -16,6 +18,8 @@ workflow perturbSeq {
         fastq_prefix : {help: "A prefix for the names of the input FASTQ files"}
         mapping_references : {help: "The path to STAR reference files to use for mapping"}
         annotation : {help: "(Optional) The path to reference file for cell type annotation of the clustering results."}
+        snt_fastqs : {help: "(Optional) The path to the input SNT FASTQ files"}
+        snt_tags : {help: "(Optional) The path to the SNT tags file"}
     }
     meta {
         author: "Yueyao Gao"
@@ -29,6 +33,8 @@ workflow perturbSeq {
             fastqs = fastqs,
             fastq_prefix = fastq_prefix,
             mapping_references = mapping_references,
+            snt_fastqs = snt_fastqs,
+            snt_tags = snt_tags,
             annotation = annotation
     }
 
@@ -44,6 +50,8 @@ task PIPseeker {
         Array[File] fastqs
         String fastq_prefix
         Array[File] mapping_references
+        Array[File]? snt_fastqs
+        File? snt_tags
         String pipseeker_docker = "public.ecr.aws/w3e1n2j6/fluent-pipseeker:3.1.3"
         File? annotation
         Int mem_size = 32
@@ -64,6 +72,16 @@ task PIPseeker {
         declare -a REF_ARRAY=(~{sep=' ' mapping_references})
         for f in "${REF_ARRAY[@]}"; do mv $f REFERNCE; done
 
+        if [ -n ~{snt_fastqs} ]; then
+            echo "Creating SNT_FASTQS directory to store input SNT fastq files"
+            mkdir SNT_FASTQS
+            declare -a SNT_ARRAY=(~{sep=' ' snt_fastqs})
+            for f in "${SNT_ARRAY[@]}"; do mv $f SNT_FASTQS; done
+            SNT_FASTQ_OPTION="--snt-fastq SNT_FASTQS"
+        else
+            SNT_FASTQ_OPTION=""
+        fi
+
         echo "Running PIPseeker"
         echo "PIPseeker version: ~{pipseeker_docker}"
 
@@ -71,6 +89,8 @@ task PIPseeker {
         --chemistry ~{PIPseq_chemistry} \
         --fastq SAMPLE_FASTQS/~{fastq_prefix} \
         --star-index-path REFERNCE \
+        $SNT_FASTQ_OPTION \
+        ~{'--snt-tags '+ snt_tags} \
         ~{'--annotation '+ annotation} \
         --id ~{fastq_prefix} \
         --output-path RESULTS \
