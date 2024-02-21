@@ -4,7 +4,7 @@ workflow perturbSeq {
     input {
         String PIPseq_chemistry
         Array[File] fastqs
-        String fastq_prefix
+        String sample_id
         Array[File] mapping_references
         Array[File] snt_fastqs
         File snt_tags
@@ -15,7 +15,7 @@ workflow perturbSeq {
     parameter_meta {
         PIPseq_chemistry : {help: "Versions of the PIPseq assay", suggestions: ["v3", "v4", "v5"]}
         fastqs : {help: "The path to the input FASTQ files"}
-        fastq_prefix : {help: "A prefix for the names of the input FASTQ files"}
+        sample_id : {help: "Sample ID for the perturb-seq data. It will be used as the prefix for the output files."}
         mapping_references : {help: "The path to STAR reference files to use for mapping"}
         annotation : {help: "(Optional) The path to reference file for cell type annotation of the clustering results."}
         snt_fastqs : {help: "The path to the input SNT FASTQ files"}
@@ -31,7 +31,7 @@ workflow perturbSeq {
         input:
             PIPseq_chemistry = PIPseq_chemistry,
             fastqs = fastqs,
-            fastq_prefix = fastq_prefix,
+            sample_id = sample_id,
             mapping_references = mapping_references,
             snt_fastqs = snt_fastqs,
             snt_tags = snt_tags,
@@ -48,7 +48,7 @@ task PIPseeker {
     input {
         String PIPseq_chemistry
         Array[File] fastqs
-        String fastq_prefix
+        String sample_id
         Array[File] mapping_references
         Array[File] snt_fastqs
         File snt_tags
@@ -85,17 +85,17 @@ task PIPseeker {
 
         /app/pipseeker full \
         --chemistry ~{PIPseq_chemistry} \
-        --fastq SAMPLE_FASTQS/~{fastq_prefix} \
+        --fastq SAMPLE_FASTQS/. \
         --star-index-path REFERNCE \
-        --snt-fastq SNT_FASTQS \
+        --snt-fastq SNT_FASTQS/. \
         --snt-tags ~{snt_tags} \
         ~{'--annotation '+ annotation} \
-        --id ~{fastq_prefix} \
+        --id ~{sample_id} \
         --output-path RESULTS \
         --threads ~{cpu_count}
 
-        mv RESULTS/*.html ~{fastq_prefix}_report.html
-        mv RESULTS/*.bam ~{fastq_prefix}_star_out.bam
+        mv RESULTS/*.html ~{sample_id}_report.html
+        mv RESULTS/*.bam ~{sample_id}_star_out.bam
     >>>
     runtime {
         docker: pipseeker_docker
@@ -107,7 +107,7 @@ task PIPseeker {
   }
 
   output {
-    File PIPseeker_report = "~{fastq_prefix}_report.html"
-      File star_out_bam = "~{fastq_prefix}_star_out.bam"
+    File PIPseeker_report = "~{sample_id}_report.html"
+      File star_out_bam = "~{sample_id}_star_out.bam"
     }
 }
