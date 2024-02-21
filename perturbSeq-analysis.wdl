@@ -72,7 +72,7 @@ task PIPseeker {
         declare -a REF_ARRAY=(~{sep=' ' mapping_references})
         for f in "${REF_ARRAY[@]}"; do mv $f REFERNCE; done
 
-        if [ -n ~{snt_fastqs} ]; then
+        if [ -n ~{sep=' ' snt_fastqs} ]; then
             echo "Creating SNT_FASTQS directory to store input SNT fastq files"
             mkdir SNT_FASTQS
             declare -a SNT_ARRAY=(~{sep=' ' snt_fastqs})
