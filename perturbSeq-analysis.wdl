@@ -82,7 +82,7 @@ task PIPseeker {
         # Check the integrity of the snt_tag file
         mkdir SNT_TAGS
         mv ~{snt_tags} SNT_TAGS/snt_tags.csv
-        head -n 5 SNT_TAGS/snt_tags.csv
+        head -n 5 tags_T1000_sgrna_reference.csv
 
         echo "Running PIPseeker"
         echo "PIPseeker version: ~{pipseeker_docker}"
