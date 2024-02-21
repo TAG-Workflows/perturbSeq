@@ -92,7 +92,7 @@ task PIPseeker {
         ~{'--annotation '+ annotation} \
         --id ~{sample_id} \
         --output-path RESULTS \
-        --threads ~{cpu_count}
+        --threads 0
 
         mv RESULTS/*.html ~{sample_id}_report.html
         mv RESULTS/*.bam ~{sample_id}_star_out.bam
@@ -105,7 +105,6 @@ task PIPseeker {
         disks: "local-disk " + disk_size + " HDD"
         preemptible: preemptible
   }
-
   output {
     File PIPseeker_report = "~{sample_id}_report.html"
       File star_out_bam = "~{sample_id}_star_out.bam"
