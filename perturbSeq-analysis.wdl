@@ -79,6 +79,10 @@ task PIPseeker {
         for f in "${SNT_ARRAY[@]}"; do mv $f SNT_FASTQS; done
         SNT_FASTQ_OPTION="--snt-fastq SNT_FASTQS"
 
+        # Check the integrity of the snt_tag file
+        mkdir SNT_TAGS
+        mv ~{snt_tags} SNT_TAGS/snt_tags.csv
+        head -n 5 SNT_TAGS/snt_tags.csv
 
         echo "Running PIPseeker"
         echo "PIPseeker version: ~{pipseeker_docker}"
@@ -88,11 +92,12 @@ task PIPseeker {
         --fastq SAMPLE_FASTQS/. \
         --star-index-path REFERNCE \
         --snt-fastq SNT_FASTQS/. \
-        --snt-tags ~{snt_tags} \
+        --snt-tags SNT_TAGS/snt_tags.csv \
         ~{'--annotation '+ annotation} \
         --id ~{sample_id} \
         --output-path RESULTS \
-        --threads 0
+        --threads 0 \
+        --verbosity 2 # 0: silent, 1: concised, 2: detailed (for dev)
 
         mv RESULTS/*.html ~{sample_id}_report.html
         mv RESULTS/*.bam ~{sample_id}_star_out.bam
